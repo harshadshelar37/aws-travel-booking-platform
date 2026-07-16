@@ -1,0 +1,14 @@
+[Unit]
+Description=Gunicorn instance to serve travel backend
+After=network.target
+
+[Service]
+User=ec2-user
+Group=ec2-user
+WorkingDirectory=/home/ec2-user/app/backend
+Environment="PATH=/usr/local/bin:/usr/bin"
+EnvironmentFile=/home/ec2-user/app/backend/.env
+ExecStart=/usr/local/bin/gunicorn --workers 3 --bind 127.0.0.1:5000 app:app
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelEase ? Book Flights, Hotels, Buses & More</title>
+    <meta name="description" content="Book flights, hotels, buses, cabs and holiday packages at the best prices. India's smartest travel booking platform.">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" id="navbar">
+    <div class="nav-inner">
+        <div class="nav-brand">
+            <i class="fa-solid fa-plane-departure brand-icon"></i>
+            <span class="brand-text">TravelEase</span>
+        </div>
+        <div class="nav-links">
+            <a href="#" class="nav-link" onclick="showOffers(); return false;"><i class="fa-solid fa-tag"></i> Offers</a>
+            <a href="#" class="nav-link" onclick="showMyTrips(); return false;"><i class="fa-solid fa-suitcase"></i> My Trips</a>
+            <a href="#" class="nav-link" onclick="openSupport(); return false;"><i class="fa-solid fa-headset"></i> Support</a>
+            <a href="#" class="nav-link" onclick="showModal('admin-login'); return false;" style="color:var(--primary); font-weight:600;"><i class="fa-solid fa-user-shield"></i> Admin</a>
+        </div>
+        <div id="user-section">
+            <button class="btn-login" onclick="showModal('login')">
+                <i class="fa-regular fa-user"></i> Login / Signup
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ===== HERO SECTION ===== -->
+<section class="hero" id="main-view">
+    <div class="hero-bg">
+        <div class="hero-shape shape1"></div>
+        <div class="hero-shape shape2"></div>
+        <div class="hero-shape shape3"></div>
+    </div>
+    <div class="hero-content">
+        <p class="hero-tagline">?? India's Most Trusted Travel Platform</p>
+        <h1 class="hero-title">Where Do You Want<br><span class="gradient-text">To Go?</span></h1>
+    </div>
+
+    <!-- ===== SEARCH CARD ===== -->
+    <div class="search-card">
+        <!-- Tab Bar -->
+        <div class="tab-bar">
+            <button class="tab-btn active" data-target="flights" onclick="switchTab('flights', this)">
+                <i class="fa-solid fa-plane"></i> Flights
+            </button>
+            <button class="tab-btn" data-target="hotels" onclick="switchTab('hotels', this)">
+                <i class="fa-solid fa-hotel"></i> Hotels
+            </button>
+            <button class="tab-btn" data-target="buses" onclick="switchTab('buses', this)">
+                <i class="fa-solid fa-bus"></i> Buses
+            </button>
+            <button class="tab-btn" data-target="cabs" onclick="switchTab('cabs', this)">
+                <i class="fa-solid fa-taxi"></i> Cabs
+            </button>
+            <button class="tab-btn" data-target="packages" onclick="switchTab('packages', this)">
+                <i class="fa-solid fa-suitcase-rolling"></i> Packages
+            </button>
+            <button class="tab-btn" data-target="trains" onclick="switchTab('trains', this)">
+                <i class="fa-solid fa-train"></i> Trains
+            </button>
+        </div>
+        <!-- Dynamic Form -->
+        <div id="form-container"></div>
+    </div>
+</section>
+
+<!-- ===== RESULTS SECTION ===== -->
+<section class="results-section" id="results-section" style="display:none;">
+    <div class="results-inner">
+        <div class="results-header">
+            <div>
+                <h2 id="results-title" class="results-title">Results</h2>
+                <p id="results-subtitle" class="results-subtitle"></p>
+            </div>
+            <button class="btn-back" onclick="hideResults()">
+                <i class="fa-solid fa-arrow-left"></i> Modify Search
+            </button>
+        </div>
+        <div id="loader" class="loader-wrap" style="display:none;">
+            <div class="loader-spinner"></div>
+            <p>Searching best options for you...</p>
+        </div>
+        <div id="results-grid" class="results-grid"></div>
+    </div>
+</section>
+
+<!-- ===== CHECKOUT VIEW ===== -->
+<section class="checkout-section" id="checkout-view" style="display:none;">
+    <div class="checkout-inner">
+        <button class="btn-back" onclick="goBackToSearch()">
+            <i class="fa-solid fa-arrow-left"></i> Back to Results
+        </button>
+        <div class="checkout-card">
+            <div class="checkout-header">
+                <i class="fa-solid fa-lock checkout-icon"></i>
+                <h2>Secure Checkout</h2>
+            </div>
+            <div id="booking-summary" class="booking-summary"></div>
+
+            <form id="payment-form" onsubmit="submitPayment(event)">
+                <div class="payment-methods">
+                    <label class="pay-method active" id="pm-card">
+                        <input type="radio" name="pay_method" value="card" checked onchange="showPaymentForm('card')">
+                        <i class="fa-solid fa-credit-card"></i> Credit / Debit Card
+                    </label>
+                    <label class="pay-method" id="pm-upi">
+                        <input type="radio" name="pay_method" value="upi" onchange="showPaymentForm('upi')">
+                        <i class="fa-solid fa-mobile-screen-button"></i> UPI
+                    </label>
+                    <label class="pay-method" id="pm-nb">
+                        <input type="radio" name="pay_method" value="netbanking" onchange="showPaymentForm('netbanking')">
+                        <i class="fa-solid fa-building-columns"></i> Net Banking
+                    </label>
+                </div>
+
+                <div id="payment-fields-card" class="payment-fields">
+                    <div class="field-group">
+                        <label>Card Number</label>
+                        <input type="text" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)">
+                    </div>
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label>Expiry Date</label>
+                            <input type="text" placeholder="MM / YY" maxlength="7">
+                        </div>
+                        <div class="field-group">
+                            <label>CVV</label>
+                            <input type="password" placeholder="???" maxlength="3">
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label>Name on Card</label>
+                        <input type="text" placeholder="HARSHAD SHELAR">
+                    </div>
+                </div>
+
+                <div id="payment-fields-upi" class="payment-fields" style="display:none;">
+                    <div class="upi-apps">
+                        <div class="upi-app-btn" onclick="selectUpi(this, 'gpay')">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/512px-Google_Pay_Logo.svg.png" alt="GPay">
+                            <span>Google Pay</span>
+                        </div>
+                        <div class="upi-app-btn" onclick="selectUpi(this, 'phonepe')">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/PhonePe_Logo.svg/512px-PhonePe_Logo.svg.png" alt="PhonePe">
+                            <span>PhonePe</span>
+                        </div>
+                        <div class="upi-app-btn" onclick="selectUpi(this, 'paytm')">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/512px-Paytm_Logo_%28standalone%29.svg.png" alt="Paytm">
+                            <span>Paytm</span>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label>Or enter UPI ID</label>
+                        <input type="text" placeholder="yourname@upi">
+                    </div>
+                </div>
+
+                <div id="payment-fields-netbanking" class="payment-fields" style="display:none;">
+                    <div class="field-group">
+                        <label>Select Bank</label>
+                        <select>
+                            <option>State Bank of India</option>
+                            <option>HDFC Bank</option>
+                            <option>ICICI Bank</option>
+                            <option>Axis Bank</option>
+                            <option>Kotak Mahindra Bank</option>
+                            <option>Punjab National Bank</option>
+                            <option>Bank of Baroda</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-pay" id="pay-btn">
+                    <i class="fa-solid fa-shield-halved"></i> Pay Securely
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SUCCESS VIEW ===== -->
+<section class="success-section" id="success-view" style="display:none;">
+    <div class="success-inner">
+        <div class="success-card">
+            <div class="success-anim">
+                <i class="fa-solid fa-circle-check success-icon"></i>
+            </div>
+            <h2>Booking Confirmed! ?</h2>
+            <p>Your booking is confirmed. You'll receive a confirmation shortly.</p>
+            <div class="booking-id-box">
+                <span>Booking ID</span>
+                <strong id="booking-id-display">#TB-000000</strong>
+            </div>
+            <button class="btn-primary" onclick="goBackToSearch()">Book Another Trip</button>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FEATURES SECTION ===== -->
+<section class="features-section">
+    <div class="features-inner">
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-tag"></i></div>
+            <h3>Best Prices</h3>
+            <p>Compare hundreds of options and get the lowest fares guaranteed.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-headset"></i></div>
+            <h3>24/7 Support</h3>
+            <p>Round-the-clock customer support whenever you need help.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <h3>Secure Booking</h3>
+            <p>100% safe and secure transactions with instant confirmation.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-rotate-left"></i></div>
+            <h3>Easy Cancellation</h3>
+            <p>Flexible cancellation policy with hassle-free refunds.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <i class="fa-solid fa-plane-departure"></i> TravelEase
+        </div>
+        <p>? 2026 TravelEase. All rights reserved. Built on AWS.</p>
+    </div>
+</footer>
+
+<!-- ===== LOGIN MODAL ===== -->
+<div class="modal-overlay" id="login-modal" onclick="closeModalOutside(event)">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal('login')"><i class="fa-solid fa-xmark"></i></button>
+        <div class="modal-brand">
+            <i class="fa-solid fa-plane-departure"></i> TravelEase
+        </div>
+        <div class="auth-tabs">
+            <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Login</button>
+            <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">Sign Up</button>
+        </div>
+        <div id="auth-error" class="auth-error" style="display:none;"></div>
+
+        <form id="login-form" onsubmit="handleAuth(event,'login')">
+            <div class="field-group">
+                <label>Email</label>
+                <input type="email" id="login-email" placeholder="you@example.com" required>
+            </div>
+            <div class="field-group">
+                <label>Password</label>
+                <input type="password" id="login-password" placeholder="????????" required>
+            </div>
+            <button type="submit" class="btn-primary">Login</button>
+        </form>
+
+        <form id="signup-form" onsubmit="handleAuth(event,'signup')" style="display:none;">
+            <div class="field-group">
+                <label>Full Name</label>
+                <input type="text" id="signup-name" placeholder="Harshad Shelar" required>
+            </div>
+            <div class="field-group">
+                <label>Email</label>
+                <input type="email" id="signup-email" placeholder="you@example.com" required>
+            </div>
+            <div class="field-group">
+                <label>Password</label>
+                <input type="password" id="signup-password" placeholder="Min 8 characters" required minlength="8">
+            </div>
+            <button type="submit" class="btn-primary">Create Account</button>
+        </form>
+    </div>
+</div>
+
+<!-- City datalist for autocomplete -->
+<datalist id="locations-list"></datalist>
+
+<!-- ===== SUPPORT CHAT WIDGET ===== -->
+<div class="support-fab" id="support-fab" onclick="openSupport()" title="Chat with us">
+    <i class="fa-solid fa-headset" id="support-fab-icon"></i>
+</div>
+
+<div class="support-panel" id="support-panel">
+    <div class="support-panel-header">
+        <div>
+            <div style="font-weight:700; font-size:1rem;">TravelEase Support</div>
+            <div style="font-size:0.75rem; opacity:0.85;"><i class="fa-solid fa-circle" style="color:#4ade80; font-size:0.5rem;"></i> We're online</div>
+        </div>
+        <button onclick="closeSupport()" style="background:rgba(255,255,255,0.2); border:none; border-radius:50%; width:32px; height:32px; cursor:pointer; color:white; font-size:1rem;">&times;</button>
+    </div>
+    <div class="support-panel-body" id="support-chat-body">
+        <div class="support-msg support-msg-bot">
+            <div class="support-avatar"><i class="fa-solid fa-robot"></i></div>
+            <div class="support-bubble">Hi there! &#128075; I'm your TravelEase assistant. How can I help you today?</div>
+        </div>
+        <div class="support-quick-replies">
+            <button onclick="quickReply('Track my booking')">&#128338; Track Booking</button>
+            <button onclick="quickReply('Cancellation policy')">&#10060; Cancellations</button>
+            <button onclick="quickReply('Payment issues')">&#128179; Payments</button>
+            <button onclick="quickReply('Change my flight')">&#9992; Change Flight</button>
+        </div>
+    </div>
+    <div class="support-panel-footer">
+        <input type="text" id="support-input" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendSupportMsg()">
+        <button onclick="sendSupportMsg()"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+</div>
+
+<!-- ===== MY TRIPS MODAL ===== -->
+<div class="modal-overlay" id="trips-modal" onclick="closeModalOutside2(event)">
+    <div class="modal-box" style="max-width:560px;">
+        <button class="modal-close" onclick="closeModal2('trips')"><i class="fa-solid fa-xmark"></i></button>
+        <h2 style="margin-bottom:20px; font-size:1.3rem;"><i class="fa-solid fa-suitcase" style="color:var(--primary)"></i> My Trips</h2>
+        <div id="trips-content"></div>
+    </div>
+</div>
+
+
+<!-- Admin Login Modal -->
+<div class="modal-overlay" id="admin-login-modal" onclick="closeModalOutside(event, 'admin-login')">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal('admin-login')"><i class="fa-solid fa-xmark"></i></button>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <i class="fa-solid fa-user-shield" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 12px;"></i>
+            <h2 style="font-size: 1.5rem;">Admin Portal</h2>
+        </div>
+        <form onsubmit="handleAdminLogin(event)">
+<div id="admin-error" style="color: #dc2626; background: #fee2e2; border: 1px solid #f87171; padding: 10px; border-radius: 6px; margin-bottom: 16px; display: none; text-align: center; font-size: 0.9rem;">Invalid Admin Credentials!</div>
+            <div class="input-group" style="margin-bottom:16px;">
+                <label>Admin Username</label>
+                <input type="text" id="admin-user" placeholder="admin" required style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc;">
+            </div>
+            <div class="input-group" style="margin-bottom:16px;">
+                <label>Admin Password</label>
+                <input type="password" id="admin-pwd" placeholder="Enter password" required style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc;">
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; background: linear-gradient(135deg, #1e293b, #0f172a);">Access Dashboard</button>
+        </form>
+    </div>
+</div>
+<script src="app.js?v=6"></script>
+
+</body>
+</html>
