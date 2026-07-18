@@ -309,18 +309,11 @@ def book_service():
         elif service_type == 'Packages': service_type = 'Package'
         
         cursor.execute(
-            "INSERT INTO bookings (user_id, booking_type, reference_id, status, payment_status) VALUES (%s, %s, %s, 'Confirmed', 'Paid')",
-            (user_id, service_type, data['service_id'])
+            "INSERT INTO bookings (user_id, service_type, service_id, total_price, status) VALUES (%s, %s, %s, %s, 'Confirmed')",
+            (user_id, service_type, data['service_id'], data['total_price'])
         )
         conn.commit()
         booking_id = cursor.lastrowid
-        
-        # Insert payment record
-        cursor.execute(
-            "INSERT INTO payments (booking_id, amount, payment_mode, status) VALUES (%s, %s, 'Credit Card', 'Success')",
-            (booking_id, data['total_price'])
-        )
-        conn.commit()
         
         cursor.close()
         conn.close()
@@ -345,16 +338,15 @@ def get_admin_stats():
         total_bookings = cursor.fetchone()['total_bookings']
         
         # Get total revenue
-        cursor.execute("SELECT SUM(amount) as total_revenue FROM payments WHERE status = 'Success'")
+        cursor.execute("SELECT SUM(total_price) as total_revenue FROM bookings WHERE status = 'Confirmed'")
         rev_row = cursor.fetchone()
         total_revenue = float(rev_row['total_revenue']) if rev_row['total_revenue'] else 0.0
         
         # Get recent bookings
         query = '''
-            SELECT b.booking_id, u.name as user_name, b.booking_type, b.booking_date, p.amount 
+            SELECT b.id as booking_id, u.name as user_name, b.service_type as booking_type, b.booking_date, b.total_price as amount 
             FROM bookings b 
-            JOIN users u ON b.user_id = u.user_id 
-            LEFT JOIN payments p ON b.booking_id = p.booking_id
+            JOIN users u ON b.user_id = u.id 
             ORDER BY b.booking_date DESC 
             LIMIT 5
         '''
