@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -37,9 +38,7 @@
 <!-- ===== HERO SECTION ===== -->
 <section class="hero" id="main-view">
     <div class="hero-bg">
-        <div class="hero-shape shape1"></div>
-        <div class="hero-shape shape2"></div>
-        <div class="hero-shape shape3"></div>
+        <div id="hero-watermark"><i class="fa-solid fa-plane"></i></div>
     </div>
     <div class="hero-content">
         <p class="hero-tagline">?? India's Most Trusted Travel Platform</p>
@@ -123,24 +122,25 @@
                     </label>
                 </div>
 
+                <div id="payment-error" style="color: #dc2626; background: #fee2e2; border: 1px solid #f87171; padding: 10px; border-radius: 6px; margin-bottom: 16px; display: none; text-align: center; font-size: 0.9rem;"></div>
                 <div id="payment-fields-card" class="payment-fields">
                     <div class="field-group">
                         <label>Card Number</label>
-                        <input type="text" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)">
+                        <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)">
                     </div>
                     <div class="field-row">
                         <div class="field-group">
                             <label>Expiry Date</label>
-                            <input type="text" placeholder="MM / YY" maxlength="7">
+                            <input type="text" id="card-expiry" placeholder="MM / YY" maxlength="7">
                         </div>
                         <div class="field-group">
                             <label>CVV</label>
-                            <input type="password" placeholder="???" maxlength="3">
+                            <input type="password" id="card-cvv" placeholder="***" maxlength="3">
                         </div>
                     </div>
                     <div class="field-group">
                         <label>Name on Card</label>
-                        <input type="text" placeholder="HARSHAD SHELAR">
+                        <input type="text" id="card-name" placeholder="HARSHAD SHELAR">
                     </div>
                 </div>
 
@@ -351,7 +351,23 @@
         </form>
     </div>
 </div>
-<script src="app.js?v=6"></script>
+
+<!-- ===== MAP MODAL ===== -->
+<div class="modal-overlay" id="map-modal" onclick="closeMapModalOutside(event)">
+    <div class="modal-box" style="max-width:800px; width:90%; height:80vh; display:flex; flex-direction:column; padding:0;">
+        <div style="padding:15px 20px; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; background:#f8fafc; border-radius:12px 12px 0 0;">
+            <h2 style="font-size:1.25rem; margin:0;"><i class="fa-solid fa-map-location-dot" style="color:var(--primary);"></i> Select Location</h2>
+            <button class="modal-close" style="position:static; padding:0;" onclick="closeMapModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="map" style="flex:1; width:100%;"></div>
+        <div style="padding:15px 20px; background:#f8fafc; border-top:1px solid #e2e8f0; border-radius:0 0 12px 12px; display:flex; justify-content:flex-end;">
+            <button type="button" class="btn-primary" onclick="confirmMapLocation()">Confirm Location</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="app.js?v=14"></script>
 
 </body>
 </html>

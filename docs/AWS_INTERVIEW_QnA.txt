@@ -1,0 +1,46 @@
+===========================================================================
+AWS INTERVIEW Q&A - TRAVEL BOOKING PLATFORM
+===========================================================================
+This document contains the exact questions an interviewer will ask you, and how you should answer them using your Travel Booking Platform as the perfect real-world example.
+
+---------------------------------------------------------------------------
+QUESTION 1: Tell me about a recent AWS project you worked on.
+---------------------------------------------------------------------------
+HOW TO ANSWER:
+"I recently built a fully functional, production-ready Travel Booking Platform on AWS. I designed it using a classic 3-Tier Architecture for maximum security and scalability. I wrote the entire infrastructure as code using AWS CloudFormation. It features an Application Load Balancer routing traffic to an Auto Scaling Group of EC2 instances running NGINX and a Python Flask backend. For the database, I provisioned a managed Amazon RDS MySQL instance placed strictly in private subnets to secure the booking data."
+
+---------------------------------------------------------------------------
+QUESTION 2: How did you secure your database in your AWS project?
+---------------------------------------------------------------------------
+HOW TO ANSWER:
+"I used a defense-in-depth approach using VPC Subnets and Security Groups. First, I placed the RDS MySQL instance inside a Private Subnet, meaning it has no public IP address and cannot be reached from the open internet. Second, I created a strict Database Security Group that only allows inbound traffic on port 3306 from the specific Security Group attached to my EC2 web servers. Nobody else can even attempt to connect to it."
+
+---------------------------------------------------------------------------
+QUESTION 3: What happens if your application gets a sudden spike in traffic?
+---------------------------------------------------------------------------
+HOW TO ANSWER:
+"My application is highly available and scalable. I put an Application Load Balancer (ALB) at the front of the public subnets to distribute incoming HTTP requests. Behind the ALB, my EC2 instances are wrapped in an Auto Scaling Group. If CPU utilization spikes because of heavy traffic, the Auto Scaling Group automatically launches new EC2 instances and registers them with the ALB. When traffic drops, it scales back down to save costs."
+
+---------------------------------------------------------------------------
+QUESTION 4: Why did you use CloudFormation instead of clicking through the AWS console?
+---------------------------------------------------------------------------
+HOW TO ANSWER:
+"I used Infrastructure as Code (CloudFormation) because clicking through the console is prone to human error and isn't reproducible. By writing my VPC, subnets, EC2, and RDS configurations in a YAML file, I can spin up an identical 'staging' or 'production' environment in 10 minutes. It also acts as living documentation—if someone wants to know how my networking is configured, they can just read my CloudFormation template."
+
+---------------------------------------------------------------------------
+QUESTION 5: How do your EC2 instances get their application code when they scale up?
+---------------------------------------------------------------------------
+HOW TO ANSWER:
+"I used the AWS cfn-init helper script in my CloudFormation template's UserData section. When a new EC2 instance boots up, it automatically reads the AWS::CloudFormation::Init metadata, installs Python, NGINX, and MySQL dependencies, creates the application directories, writes the frontend and backend files, and starts the Systemd services. The instance is 100% ready to serve traffic the moment it finishes booting."
+
+---------------------------------------------------------------------------
+QUESTION 6: What is a VPC and why do you need an Internet Gateway?
+---------------------------------------------------------------------------
+HOW TO ANSWER:
+"A VPC is a logically isolated virtual network where I launch my resources. By default, resources in a VPC cannot talk to the internet. I attached an Internet Gateway to the VPC and added a route in my Public Route Table (0.0.0.0/0 -> IGW) so that my Application Load Balancer and the users on the internet could communicate with each other."
+
+---------------------------------------------------------------------------
+QUESTION 7: How are you managing costs on this project?
+---------------------------------------------------------------------------
+HOW TO ANSWER:
+"I specifically architected the platform to fit entirely within the AWS Free Tier. I used a t2.micro for the EC2 instances, a db.t3.micro for the RDS MySQL database, and allocated 20GB of General Purpose SSD (gp2) storage. By using Auto Scaling, I ensure I'm not running more compute than necessary, though I have the minimum capacity set to 1 to stay within the free tier limits while testing."

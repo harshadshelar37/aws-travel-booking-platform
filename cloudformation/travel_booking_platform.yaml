@@ -674,15 +674,30 @@ Resources:
                         conn.close()
                         
                         extra_cities = {
-                            "Delhi", "Mumbai", "Bangalore", "Hyderabad", "Chennai", "Kolkata", 
-                            "Pune", "Ahmedabad", "Jaipur", "Surat", "Lucknow", "Kanpur", "Nagpur",
-                            "Indore", "Thane", "Bhopal", "Visakhapatnam", "Patna", "Vadodara",
-                            "Ghaziabad", "Ludhiana", "Agra", "Nashik", "Faridabad", "Meerut",
-                            "Rajkot", "Varanasi", "Srinagar", "Aurangabad", "Amritsar", "Navi Mumbai",
-                            "Ranchi", "Howrah", "Coimbatore", "Gwalior", "Vijayawada", "Jodhpur",
-                            "Madurai", "Raipur", "Kota", "Guwahati", "Chandigarh", "Mysore",
-                            "Tiruchirappalli", "Bareilly", "Gurgaon", "Noida", "Kochi", "Dehradun",
-                            "Jammu", "Mangalore", "Udaipur", "Goa",
+                            "Delhi", "Mumbai", "Bangalore", "Hyderabad", "Chennai", "Kolkata", "Pune", "Ahmedabad", "Jaipur", "Surat",
+                            "Lucknow", "Kanpur", "Nagpur", "Indore", "Thane", "Bhopal", "Visakhapatnam", "Patna", "Vadodara", "Ghaziabad",
+                            "Ludhiana", "Agra", "Nashik", "Faridabad", "Meerut", "Rajkot", "Varanasi", "Srinagar", "Aurangabad", "Amritsar",
+                            "Navi Mumbai", "Ranchi", "Howrah", "Coimbatore", "Gwalior", "Vijayawada", "Jodhpur", "Madurai", "Raipur", "Kota",
+                            "Guwahati", "Chandigarh", "Mysore", "Tiruchirappalli", "Bareilly", "Gurgaon", "Noida", "Kochi", "Dehradun", "Jammu",
+                            "Mangalore", "Udaipur", "Goa", "Aligarh", "Jalandhar", "Bhubaneswar", "Salem", "Mira-Bhayandar", "Warangal", "Guntur",
+                            "Bhiwandi", "Saharanpur", "Gorakhpur", "Bikaner", "Amravati", "Noida", "Jamshedpur", "Bhilai", "Cuttack", "Firozabad",
+                            "Kochi", "Nellore", "Bhavnagar", "Dehradun", "Durgapur", "Asansol", "Rourkela", "Nanded", "Kolhapur", "Ajmer",
+                            "Akola", "Gulbarga", "Jamnagar", "Ujjain", "Loni", "Siliguri", "Jhansi", "Ulhasnagar", "Jammu", "Sangli-Miraj & Kupwad",
+                            "Mangalore", "Erode", "Belgaum", "Ambattur", "Tirunelveli", "Malegaon", "Gaya", "Jalgaon", "Udaipur", "Maheshtala",
+                            "Davanagere", "Kozhikode", "Kurnool", "Rajpur Sonarpur", "Rajahmundry", "Bokaro", "South Dumdum", "Bellary", "Patiala",
+                            "Gopalpur", "Agartala", "Bhagalpur", "Muzaffarnagar", "Bhatpara", "Panihati", "Latur", "Dhule", "Tirupati", "Rohtak",
+                            "Korba", "Bhilwara", "Berhampur", "Muzaffarpur", "Ahmednagar", "Mathura", "Kollam", "Avadi", "Kadapa", "Kamarhati",
+                            "Sambalpur", "Bilaspur", "Shahjahanpur", "Satara", "Bijapur", "Rampur", "Shivamogga", "Chandrapur", "Junagadh",
+                            "Thrissur", "Alwar", "Bardhaman", "Kulti", "Kakinada", "Nizamabad", "Parbhani", "Tumkur", "Khammam", "Ozhukarai",
+                            "Bihar Sharif", "Panipat", "Darbhanga", "Bally", "Aizawl", "Dewas", "Ichalkaranji", "Karnal", "Bathinda", "Jalna",
+                            "Eluru", "Kirari Suleman Nagar", "Barasat", "Purnia", "Satna", "Mau", "Sonipat", "Farrukhabad", "Sagar", "Rourkela",
+                            "Durg", "Imphal", "Ratlam", "Hapur", "Arrah", "Karimnagar", "Anantapur", "Etawah", "Ambernath", "North Dumdum",
+                            "Bharatpur", "Begusarai", "New Delhi", "Gandhidham", "Baranagar", "Tiruvottiyur", "Pondicherry", "Sikar", "Thoothukudi",
+                            "Rewa", "Mirzapur", "Raichur", "Pali", "Ramagundam", "Haridwar", "Vijayanagaram", "Katihar", "Nagercoil", "Sri Ganganagar",
+                            "Karawal Nagar", "Mango", "Thanjavur", "Bulandshahr", "Uluberia", "Murwara", "Rajpur Sonarpur", "Sambhal", "Singrauli",
+                            "Nadiad", "Secunderabad", "Naihati", "Yamunanagar", "Bidhannagar", "Pallavaram", "Bidar", "Munger", "Panchkula", "Burhanpur",
+                            "Raurkela Industrial Township", "Kharagpur", "Dindigul", "Gandhinagar", "Hospet", "Nangloi Jat", "English Bazar", "Ongole",
+                            "Deoghar", "Chapra", "Haldia", "Khandwa", "Nandyal", "Chittoor", "Orai", "Bhimavaram", "Anand", "Raebareli", "Bhiwani",
                             "New York", "London", "Paris", "Tokyo", "Dubai", "Singapore", "Sydney"
                         }
                         locations.update(extra_cities)
@@ -844,17 +859,306 @@ Resources:
                     try:
                         cursor = conn.cursor()
                         user_id = data.get('user_id')
+                        service_type = data['service_type'].capitalize() # Flight, Hotel, etc.
+                        # Handle plural to singular mapping
+                        if service_type == 'Flights': service_type = 'Flight'
+                        elif service_type == 'Hotels': service_type = 'Hotel'
+                        elif service_type == 'Cabs': service_type = 'Cab'
+                        elif service_type == 'Packages': service_type = 'Package'
+                        
                         cursor.execute(
-                            "INSERT INTO bookings (user_id, service_type, service_id, total_price) VALUES (%s, %s, %s, %s)",
-                            (user_id, data['service_type'], data['service_id'], data['total_price'])
+                            "INSERT INTO bookings (user_id, service_type, service_id, total_price, status) VALUES (%s, %s, %s, %s, 'Confirmed')",
+                            (user_id, service_type, data['service_id'], data['total_price'])
                         )
                         conn.commit()
                         booking_id = cursor.lastrowid
+                        
                         cursor.close()
                         conn.close()
                         return jsonify({"success": True, "booking_id": booking_id, "message": "Booking Confirmed!"})
                     except Exception as e:
                         return jsonify({"error": str(e)}), 500
+                
+                @app.route('/api/user/bookings/<int:user_id>', methods=['GET'])
+                def get_user_bookings(user_id):
+                    conn = get_db_connection()
+                    if not conn: return jsonify({"error": "Database connection failed"}), 500
+                    try:
+                        cursor = conn.cursor(dictionary=True)
+                        cursor.execute('''
+                            SELECT b.*, 
+                                   f.airline, f.origin as flight_origin, f.destination as flight_dest,
+                                   h.name as hotel_name, h.location as hotel_loc,
+                                   c.type as cab_type, c.driver_name,
+                                   bus.operator_name, bus.origin as bus_origin, bus.destination as bus_dest,
+                                   p.destination as package_dest, p.days as package_days
+                            FROM bookings b
+                            LEFT JOIN flights f ON b.service_type IN ('Flight', 'Flights') AND b.service_id = f.id
+                            LEFT JOIN hotels h ON b.service_type IN ('Hotel', 'Hotels') AND b.service_id = h.id
+                            LEFT JOIN cabs c ON b.service_type IN ('Cab', 'Cabs') AND b.service_id = c.id
+                            LEFT JOIN buses bus ON b.service_type IN ('Bus', 'Buses') AND b.service_id = bus.id
+                            LEFT JOIN packages p ON b.service_type IN ('Package', 'Packages') AND b.service_id = p.id
+                            WHERE b.user_id = %s
+                            ORDER BY b.booking_date DESC
+                        ''', (user_id,))
+                        bookings = cursor.fetchall()
+                        cursor.close()
+                        conn.close()
+                        return jsonify(bookings)
+                    except Exception as e:
+                        return jsonify({"error": str(e)}), 500
+                
+                @app.route('/api/admin/users', methods=['GET'])
+                def get_admin_users():
+                    conn = get_db_connection()
+                    if not conn: return jsonify({"error": "Database connection failed"}), 500
+                    try:
+                        cursor = conn.cursor(dictionary=True)
+                        cursor.execute("SELECT id, name, email, DATE_FORMAT(created_at, '%Y-%m-%d %H:%i') as joined FROM users ORDER BY created_at DESC")
+                        users = cursor.fetchall()
+                        cursor.close()
+                        conn.close()
+                        return jsonify(users)
+                    except Exception as e:
+                        return jsonify({"error": str(e)}), 500
+                
+                @app.route('/api/admin/stats', methods=['GET'])
+                def get_admin_stats():
+                    conn = get_db_connection()
+                    if not conn: return jsonify({"error": "Database connection failed"}), 500
+                    try:
+                        cursor = conn.cursor(dictionary=True)
+                        
+                        # Get total users
+                        cursor.execute("SELECT COUNT(*) as total_users FROM users")
+                        total_users = cursor.fetchone()['total_users']
+                        
+                        # Get total bookings
+                        cursor.execute("SELECT COUNT(*) as total_bookings FROM bookings")
+                        total_bookings = cursor.fetchone()['total_bookings']
+                        
+                        # Get total revenue
+                        cursor.execute("SELECT SUM(total_price) as total_revenue FROM bookings WHERE status = 'Confirmed'")
+                        rev_row = cursor.fetchone()
+                        total_revenue = float(rev_row['total_revenue']) if rev_row['total_revenue'] else 0.0
+                        
+                        # Get recent bookings
+                        query = '''
+                            SELECT b.id as booking_id, u.name as user_name, b.service_type as booking_type, b.booking_date, b.total_price as amount 
+                            FROM bookings b 
+                            JOIN users u ON b.user_id = u.id 
+                            ORDER BY b.booking_date DESC 
+                            LIMIT 5
+                        '''
+                        cursor.execute(query)
+                        recent_bookings = cursor.fetchall()
+                        
+                        cursor.close()
+                        conn.close()
+                        
+                        return jsonify({
+                            "total_users": total_users,
+                            "total_bookings": total_bookings,
+                            "total_revenue": total_revenue,
+                            "recent_bookings": recent_bookings
+                        })
+                    except Exception as e:
+                        return jsonify({"error": str(e)}), 500
+                
+                import re
+                import requests
+                import random
+                import urllib.parse
+                
+                def get_weather(city):
+                    try:
+                        geo_url = f"https://nominatim.openstreetmap.org/search?q={urllib.parse.quote(city)}&format=json&limit=1"
+                        geo_res = requests.get(geo_url, headers={'User-Agent': 'TravelEaseChatbot/1.0'}, timeout=3).json()
+                        if not geo_res: return f"I couldn't find the location '{city}' to check the weather."
+                        
+                        lat = geo_res[0]['lat']
+                        lon = geo_res[0]['lon']
+                        
+                        weather_url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true"
+                        weather_res = requests.get(weather_url, timeout=3).json()
+                        temp = weather_res['current_weather']['temperature']
+                        return f"The current temperature in {city.title()} is {temp}°C."
+                    except Exception as e:
+                        return f"I'm having trouble fetching the weather for {city} right now."
+                
+                def get_wikipedia(query):
+                    try:
+                        formatted_query = query.title().replace(' ', '_')
+                        url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{urllib.parse.quote(formatted_query)}"
+                        res = requests.get(url, headers={'User-Agent': 'TravelEaseChatbot/1.0'}, timeout=3).json()
+                        if 'extract' in res:
+                            return res['extract']
+                        return f"I couldn't find detailed info about '{query}'."
+                    except Exception as e:
+                        return f"I'm having trouble looking up '{query}' right now."
+                
+                def get_booking_tracking(booking_id):
+                    conn = get_db_connection()
+                    if not conn: return "I'm sorry, our tracking database is currently down. Please try again later."
+                    
+                    try:
+                        cursor = conn.cursor(dictionary=True)
+                        cursor.execute("SELECT * FROM bookings WHERE id = %s", (booking_id,))
+                        booking = cursor.fetchone()
+                        
+                        if not booking:
+                            return f"I couldn't find a booking with the ID #TB-{str(booking_id).zfill(6)}. Please check your booking ID and try again."
+                            
+                        service_type = booking['service_type']
+                        service_id = booking['service_id']
+                        status = booking['status']
+                        date = booking['booking_date'].strftime('%b %d, %Y %I:%M %p') if booking['booking_date'] else 'Unknown'
+                        
+                        reply = f"Here is the tracking info for your booking <b>#TB-{str(booking_id).zfill(6)}</b>:<br><br>"
+                        reply += f"Status: <b>{status}</b><br>"
+                        reply += f"Booked on: {date}<br><br>"
+                        
+                        if service_type == 'Flight':
+                            cursor.execute("SELECT * FROM flights WHERE id = %s", (service_id,))
+                            flight = cursor.fetchone()
+                            if flight:
+                                reply += f"✈️ <b>Flight Details:</b><br>"
+                                reply += f"Airline: {flight.get('airline', 'Unknown')}<br>"
+                                reply += f"From: {flight.get('origin', 'Unknown')} at {flight.get('departure_time', 'Unknown')}<br>"
+                                reply += f"To: {flight.get('destination', 'Unknown')} at {flight.get('arrival_time', 'Unknown')}<br>"
+                        elif service_type == 'Hotel':
+                            cursor.execute("SELECT * FROM hotels WHERE id = %s", (service_id,))
+                            hotel = cursor.fetchone()
+                            if hotel:
+                                reply += f"🏨 <b>Hotel Details:</b><br>"
+                                reply += f"Name: {hotel.get('name', 'Unknown')}<br>"
+                                reply += f"Location: {hotel.get('location', 'Unknown')}<br>"
+                                reply += f"Rating: {hotel.get('rating', 'Unknown')}⭐<br>"
+                        elif service_type == 'Cab':
+                            cursor.execute("SELECT * FROM cabs WHERE id = %s", (service_id,))
+                            cab = cursor.fetchone()
+                            if cab:
+                                reply += f"🚕 <b>Cab Details:</b><br>"
+                                reply += f"Type: {cab.get('type', 'Unknown')} ({cab.get('model', 'Unknown')})<br>"
+                                reply += f"Driver: {cab.get('driver_name', 'Assigned soon')} (Rating: {cab.get('rating', 'N/A')})<br>"
+                                reply += f"ETA: Usually arrives within 10-15 mins of pickup time.<br>"
+                        elif service_type == 'Package':
+                            cursor.execute("SELECT * FROM packages WHERE id = %s", (service_id,))
+                            pkg = cursor.fetchone()
+                            if pkg:
+                                reply += f"🏝️ <b>Package Details:</b><br>"
+                                reply += f"Name: {pkg.get('name', 'Unknown')}<br>"
+                                reply += f"Destination: {pkg.get('destination', 'Unknown')}<br>"
+                                reply += f"Duration: {pkg.get('duration', 'Unknown')} Days<br>"
+                                
+                        reply += "<br>Is there anything else you need help with regarding your journey?"
+                        
+                        cursor.close()
+                        conn.close()
+                        return reply
+                    except Exception as e:
+                        print(f"Error tracking booking: {e}")
+                        return "I'm sorry, I encountered an error while retrieving your tracking details."
+                
+                @app.route('/api/chat', methods=['POST'])
+                def chat():
+                    data = request.json
+                    msg = data.get('message', '').lower()
+                    msg_clean = re.sub(r'[^\w\s]', '', msg).strip()
+                    
+                    # 0. Conversational Continuations
+                    if msg_clean in ['yes', 'yeah', 'sure', 'ok', 'okay', 'yep', 'please', 'y']:
+                        return jsonify({"reply": "Great! Please tell me exactly what you need help with (e.g., 'track #TB-000001', 'I need a flight', or 'tell me about Goa')."})
+                    if msg_clean in ['no', 'nope', 'nah', 'nothing', 'no thanks', 'n']:
+                        return jsonify({"reply": "Alright, thank you for contacting TravelEase support. Have a wonderful day!"})
+                    if msg_clean in ['help', 'more help', 'support', 'can you help me', 'i need help']:
+                        return jsonify({"reply": "I'm here to help! I can assist you with tracking bookings, finding flights, hotels, or cabs, and answering basic questions. What can I do for you?"})
+                        
+                    
+                    # 0. Booking ID Tracking Intent
+                    booking_match = re.search(r'(?:#?tb-|#?TB-)(\d+)', msg, re.IGNORECASE)
+                    if not booking_match:
+                        generic_match = re.search(r'(?:track|booking|trip).*?\b(\d{1,6})\b', msg, re.IGNORECASE)
+                        if generic_match:
+                            booking_match = generic_match
+                
+                    if booking_match:
+                        booking_id = int(booking_match.group(1))
+                        return jsonify({"reply": get_booking_tracking(booking_id)})
+                    
+                    # 1. Weather Intent
+                    weather_match = re.search(r'weather\s+(?:in|for|at|of)\s+([a-z\s]+)', msg)
+                    if weather_match:
+                        city = weather_match.group(1).strip().split('?')[0]
+                        return jsonify({"reply": get_weather(city)})
+                        
+                    # 2. Wikipedia Intent
+                    info_match = re.search(r'(?:tell me about|what is|who is|info on)\s+([a-z\s]+)', msg)
+                    if info_match:
+                        query = info_match.group(1).strip().replace('the ', '').split('?')[0]
+                        return jsonify({"reply": get_wikipedia(query)})
+                        
+                    # 3. Math Intent
+                    math_match = re.search(r'(?:what is|calculate)\s*(\d+)\s*([\+\-\*\/])\s*(\d+)', msg)
+                    if math_match:
+                        num1 = int(math_match.group(1))
+                        op = math_match.group(2)
+                        num2 = int(math_match.group(3))
+                        res = 0
+                        if op == '+': res = num1 + num2
+                        elif op == '-': res = num1 - num2
+                        elif op == '*': res = num1 * num2
+                        elif op == '/': res = num1 / num2 if num2 != 0 else 'infinity'
+                        return jsonify({"reply": f"The answer is {res}."})
+                        
+                    # 4. Joke Intent
+                    if re.search(r'\b(joke|funny|laugh)\b', msg):
+                        jokes = [
+                            "Why do airplanes get so much rest? Because they are always in the clouds! ✈️",
+                            "What do you call a travel agent who can't book a flight? Grounded! 😂",
+                            "Why did the librarian get kicked off the plane? Because it was overbooked! 📚"
+                        ]
+                        return jsonify({"reply": random.choice(jokes)})
+                
+                    # 5. Core NLP Rules
+                    response = ""
+                    
+                    if re.search(r'\b(hi|hello|hey|greetings|howdy)\b', msg):
+                        response += "Hello! 👋 I'm your TravelEase assistant. "
+                    
+                    if re.search(r'\b(flight|flights|fly|ticket|airline|aeroplane)\b', msg):
+                        response += "I see you're asking about flights! We offer great deals. You can search for flights using the 'Flights' tab. "
+                        
+                    elif re.search(r'\b(hotel|hotels|room|stay|resort)\b', msg):
+                        response += "Need a place to stay? You can explore our top-rated hotels in the 'Hotels' tab. "
+                        
+                    elif re.search(r'\b(cab|cabs|taxi|car|pickup)\b', msg):
+                        response += "We offer reliable cab services! You can even use the 'Live Location' feature on the Cabs tab to easily set your pickup point. "
+                        
+                    elif re.search(r'\b(cancel|cancellation|refund|money back)\b', msg):
+                        response += "For cancellations, you can cancel up to 24 hours before your trip. Refunds are processed to your original payment method within 5-7 business days. "
+                        
+                    elif re.search(r'\b(track|status|my booking|my trip|where is)\b', msg):
+                        response += "To check your booking status, please visit the 'My Trips' section at the top of the page. "
+                        
+                    elif re.search(r'\b(payment|pay|card|upi|fail|failed|money)\b', msg):
+                        response += "We accept Credit/Debit Cards, UPI, and Net Banking securely. If your payment failed, please ensure your card details (like the 16-digit number and expiry) are correct. "
+                        
+                    elif re.search(r'\b(thank|thanks|thx)\b', msg):
+                        return jsonify({"reply": "You're very welcome! Let me know if you need anything else. 😊"})
+                        
+                    if not response:
+                        # Fallback to Wikipedia if they just typed a term like "taj mahal"
+                        if len(msg_clean) > 2 and msg_clean not in ['yes', 'no', 'ok', 'okay', 'sure', 'help', 'yeah', 'yep', 'nope']:
+                            wiki_res = get_wikipedia(msg.strip('?').strip())
+                            if "I couldn't find detailed info" not in wiki_res and "I'm having trouble looking up" not in wiki_res:
+                                return jsonify({"reply": wiki_res})
+                                
+                        response = "I can fetch live weather, lookup information, calculate math, tell jokes, and help with your bookings! Try asking 'What is the weather in Mumbai?' or 'Tell me about Goa'."
+                    else:
+                        response += "Is there anything else I can help you with today?"
+                        
+                    return jsonify({"reply": response.strip()})
                 
                 if __name__ == '__main__':
                     app.run(host='0.0.0.0', port=5000)
@@ -887,6 +1191,7 @@ Resources:
                     <link rel="preconnect" href="https://fonts.googleapis.com">
                     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
                     <link rel="stylesheet" href="style.css">
                 </head>
                 <body>
@@ -1001,24 +1306,25 @@ Resources:
                                     </label>
                                 </div>
                 
+                                <div id="payment-error" style="color: #dc2626; background: #fee2e2; border: 1px solid #f87171; padding: 10px; border-radius: 6px; margin-bottom: 16px; display: none; text-align: center; font-size: 0.9rem;"></div>
                                 <div id="payment-fields-card" class="payment-fields">
                                     <div class="field-group">
                                         <label>Card Number</label>
-                                        <input type="text" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)">
+                                        <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)">
                                     </div>
                                     <div class="field-row">
                                         <div class="field-group">
                                             <label>Expiry Date</label>
-                                            <input type="text" placeholder="MM / YY" maxlength="7">
+                                            <input type="text" id="card-expiry" placeholder="MM / YY" maxlength="7">
                                         </div>
                                         <div class="field-group">
                                             <label>CVV</label>
-                                            <input type="password" placeholder="???" maxlength="3">
+                                            <input type="password" id="card-cvv" placeholder="***" maxlength="3">
                                         </div>
                                     </div>
                                     <div class="field-group">
                                         <label>Name on Card</label>
-                                        <input type="text" placeholder="HARSHAD SHELAR">
+                                        <input type="text" id="card-name" placeholder="HARSHAD SHELAR">
                                     </div>
                                 </div>
                 
@@ -1216,6 +1522,7 @@ Resources:
                             <h2 style="font-size: 1.5rem;">Admin Portal</h2>
                         </div>
                         <form onsubmit="handleAdminLogin(event)">
+                <div id="admin-error" style="color: #dc2626; background: #fee2e2; border: 1px solid #f87171; padding: 10px; border-radius: 6px; margin-bottom: 16px; display: none; text-align: center; font-size: 0.9rem;">Invalid Admin Credentials!</div>
                             <div class="input-group" style="margin-bottom:16px;">
                                 <label>Admin Username</label>
                                 <input type="text" id="admin-user" placeholder="admin" required style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc;">
@@ -1228,7 +1535,23 @@ Resources:
                         </form>
                     </div>
                 </div>
-                <script src="app.js"></script>
+                
+                <!-- ===== MAP MODAL ===== -->
+                <div class="modal-overlay" id="map-modal" onclick="closeMapModalOutside(event)">
+                    <div class="modal-box" style="max-width:800px; width:90%; height:80vh; display:flex; flex-direction:column; padding:0;">
+                        <div style="padding:15px 20px; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; background:#f8fafc; border-radius:12px 12px 0 0;">
+                            <h2 style="font-size:1.25rem; margin:0;"><i class="fa-solid fa-map-location-dot" style="color:var(--primary);"></i> Select Location</h2>
+                            <button class="modal-close" style="position:static; padding:0;" onclick="closeMapModal()"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <div id="map" style="flex:1; width:100%;"></div>
+                        <div style="padding:15px 20px; background:#f8fafc; border-top:1px solid #e2e8f0; border-radius:0 0 12px 12px; display:flex; justify-content:flex-end;">
+                            <button type="button" class="btn-primary" onclick="confirmMapLocation()">Confirm Location</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+                <script src="app.js?v=14"></script>
                 
                 </body>
                 </html>
@@ -1346,6 +1669,7 @@ Resources:
                     display: flex;
                     flex-direction: column;
                     align-items: center;
+                    transition: background 0.6s ease;
                 }
                 
                 .hero-bg { position: absolute; inset: 0; pointer-events: none; }
@@ -2369,15 +2693,32 @@ Resources:
                         <div class="search-form">
                             <div class="mmt-input-block">
                                 <span class="mmt-label">PICKUP LOCATION</span>
-                                <input type="text" placeholder="Enter pickup city" list="locations-list" autocomplete="off">
+                                <div style="display:flex; gap: 8px;">
+                                    <input type="text" id="cab-pickup" placeholder="Enter street, colony, or city" list="cab-pickup-suggestions" autocomplete="off" oninput="fetchAddressSuggestions(this.value, 'cab-pickup-suggestions')" style="flex:1;">
+                                    <datalist id="cab-pickup-suggestions"></datalist>
+                                    <button type="button" class="btn-outline" onclick="openMapModal('cab-pickup')" title="Select on Map" style="padding: 0 14px; border-radius: 6px; font-size: 1.2rem;"><i class="fa-solid fa-map-location-dot"></i></button>
+                                    <button type="button" class="btn-outline" onclick="useLiveLocation(this)" title="Use Live Location" style="padding: 0 14px; border-radius: 6px; font-size: 1.2rem;"><i class="fa-solid fa-location-crosshairs"></i></button>
+                                </div>
                             </div>
                             <div class="mmt-input-block">
                                 <span class="mmt-label">DROP LOCATION</span>
-                                <input type="text" placeholder="Enter drop city" list="locations-list" autocomplete="off">
+                                <div style="display:flex; gap: 8px;">
+                                    <input type="text" id="cab-drop" placeholder="Enter street, colony, or city" list="cab-drop-suggestions" autocomplete="off" oninput="fetchAddressSuggestions(this.value, 'cab-drop-suggestions')" style="flex:1;">
+                                    <datalist id="cab-drop-suggestions"></datalist>
+                                    <button type="button" class="btn-outline" onclick="openMapModal('cab-drop')" title="Select on Map" style="padding: 0 14px; border-radius: 6px; font-size: 1.2rem;"><i class="fa-solid fa-map-location-dot"></i></button>
+                                </div>
                             </div>
-                            <div class="mmt-input-block">
-                                <span class="mmt-label">PICKUP DATE & TIME</span>
-                                <input type="datetime-local">
+                            <div class="mmt-input-block" style="min-width: 220px; position: relative;">
+                                <span class="mmt-label">WHEN</span>
+                                <div style="display:flex; gap: 15px; height: 50px; align-items: center; border-bottom: 2px solid transparent;">
+                                    <label style="cursor:pointer; display:flex; align-items:center; gap:5px; font-weight:500; font-size:1.1rem; color:#0f172a;">
+                                        <input type="radio" name="cab_time_type" value="now" checked onchange="document.getElementById('cab-schedule-time').style.display='none'"> Book Now
+                                    </label>
+                                    <label style="cursor:pointer; display:flex; align-items:center; gap:5px; font-weight:500; font-size:1.1rem; color:#0f172a;">
+                                        <input type="radio" name="cab_time_type" value="schedule" onchange="document.getElementById('cab-schedule-time').style.display='block'"> Schedule
+                                    </label>
+                                </div>
+                                <input type="datetime-local" id="cab-schedule-time" style="display:none; position:absolute; top: 100%; left:0; width: 100%; z-index:10; background:white; border: 1px solid #ccc; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 10px; border-radius: 6px;">
                             </div>
                             <button type="button" class="btn-search" onclick="searchData('cabs')">
                                 <i class="fa-solid fa-magnifying-glass"></i> SEARCH
@@ -2412,19 +2753,25 @@ Resources:
                         <div class="search-form">
                             <div class="mmt-input-block">
                                 <span class="mmt-label">FROM STATION</span>
-                                <input type="text" placeholder="Delhi, Mumbai..." list="locations-list" autocomplete="off">
+                                <input type="text" id="train-origin" placeholder="Delhi, Mumbai..." list="locations-list" autocomplete="off">
                             </div>
                             <div class="mmt-input-block">
                                 <span class="mmt-label">TO STATION</span>
-                                <input type="text" placeholder="Goa, Chennai..." list="locations-list" autocomplete="off">
+                                <input type="text" id="train-dest" placeholder="Goa, Chennai..." list="locations-list" autocomplete="off">
                             </div>
                             <div class="mmt-input-block">
                                 <span class="mmt-label">TRAVEL DATE</span>
-                                <input type="date">
+                                <input type="date" id="train-date">
                             </div>
-                            <button type="button" class="btn-search" onclick="alert('Train booking powered by IRCTC — integration coming soon!')">
+                            <button type="button" class="btn-search" onclick="showTrainComingSoon()">
                                 <i class="fa-solid fa-magnifying-glass"></i> SEARCH
                             </button>
+                        </div>
+                        <div id="train-coming-soon" style="display:none; margin-top:20px; text-align:center; padding:40px 20px; background:linear-gradient(135deg, rgba(220,38,38,0.05), rgba(248,113,113,0.08)); border-radius:16px; border:1.5px dashed rgba(220,38,38,0.3);">
+                            <i class="fa-solid fa-train" style="font-size:3rem; color:#dc2626; margin-bottom:16px; display:block; animation: float 3s ease-in-out infinite;"></i>
+                            <h3 style="font-size:1.3rem; color:#1e293b; margin-bottom:8px;">Train Booking Powered by IRCTC</h3>
+                            <p style="color:#64748b; font-size:0.95rem; margin-bottom:16px;">We're integrating with IRCTC to bring you seamless train bookings.<br>This feature will be available very soon!</p>
+                            <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(220,38,38,0.1); color:#dc2626; padding:8px 20px; border-radius:20px; font-weight:600; font-size:0.85rem;"><i class="fa-solid fa-clock"></i> Coming Soon</div>
                         </div>
                     `
                 };
@@ -2446,6 +2793,52 @@ Resources:
                     }, 50);
                 });
                 
+                // Service-specific theme colors and text
+                const serviceThemes = {
+                    flights:  { 
+                        gradient: 'linear-gradient(135deg, #0f1c6b 0%, #1a56db 50%, #1171ef 100%)', 
+                        primary: '#1a56db', primaryDark: '#1040a8', primaryLight: '#eef2ff', 
+                        accent: '#ff6b35', btnGrad: 'linear-gradient(135deg, #ff6b35, #f43f5e)', icon: 'fa-plane',
+                        tagline: "✈️ India's Most Trusted Travel Platform",
+                        title: "Where Do You Want<br><span class=\"gradient-text\">To Fly?</span>"
+                    },
+                    hotels:   { 
+                        gradient: 'linear-gradient(135deg, #4c1d95 0%, #7c3aed 50%, #a78bfa 100%)', 
+                        primary: '#7c3aed', primaryDark: '#5b21b6', primaryLight: '#f5f3ff', 
+                        accent: '#f59e0b', btnGrad: 'linear-gradient(135deg, #f59e0b, #fbbf24)', icon: 'fa-hotel',
+                        tagline: "🏨 Premium Handpicked Stays",
+                        title: "Find Your Perfect<br><span class=\"gradient-text\">Hotel</span>"
+                    },
+                    buses:    { 
+                        gradient: 'linear-gradient(135deg, #064e3b 0%, #059669 50%, #34d399 100%)', 
+                        primary: '#059669', primaryDark: '#047857', primaryLight: '#ecfdf5', 
+                        accent: '#f59e0b', btnGrad: 'linear-gradient(135deg, #f59e0b, #fbbf24)', icon: 'fa-bus',
+                        tagline: "🚌 Comfortable Journeys",
+                        title: "Book Your Next<br><span class=\"gradient-text\">Bus Ticket</span>"
+                    },
+                    cabs:     { 
+                        gradient: 'linear-gradient(135deg, #78350f 0%, #d97706 50%, #fbbf24 100%)', 
+                        primary: '#d97706', primaryDark: '#b45309', primaryLight: '#fffbeb', 
+                        accent: '#1e293b', btnGrad: 'linear-gradient(135deg, #1e293b, #334155)', icon: 'fa-taxi',
+                        tagline: "🚕 Safe & Reliable Rides",
+                        title: "Book Your City<br><span class=\"gradient-text\">Cab</span>"
+                    },
+                    packages: { 
+                        gradient: 'linear-gradient(135deg, #9a3412 0%, #ea580c 50%, #fb923c 100%)', 
+                        primary: '#ea580c', primaryDark: '#c2410c', primaryLight: '#fff7ed', 
+                        accent: '#4ade80', btnGrad: 'linear-gradient(135deg, #10b981, #34d399)', icon: 'fa-suitcase-rolling',
+                        tagline: "🌴 Unforgettable Experiences",
+                        title: "Explore Holiday<br><span class=\"gradient-text\">Packages</span>"
+                    },
+                    trains:   { 
+                        gradient: 'linear-gradient(135deg, #7f1d1d 0%, #dc2626 50%, #f87171 100%)', 
+                        primary: '#dc2626', primaryDark: '#b91c1c', primaryLight: '#fef2f2', 
+                        accent: '#fbbf24', btnGrad: 'linear-gradient(135deg, #f59e0b, #fbbf24)', icon: 'fa-train',
+                        tagline: "🚆 Partnered with IRCTC",
+                        title: "Book Your Express<br><span class=\"gradient-text\">Train Ticket</span>"
+                    }
+                };
+                
                 function switchTab(target, btnEl) {
                     activeTab = target;
                     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -2453,6 +2846,37 @@ Resources:
                     
                     const container = document.getElementById('form-container');
                     container.innerHTML = formTemplates[target] || '<p style="padding:20px;text-align:center;color:#64748b">Coming soon!</p>';
+                    
+                    // Apply service-specific theme
+                    const theme = serviceThemes[target] || serviceThemes.flights;
+                    
+                    // Update Hero background, tagline, and title
+                    const hero = document.querySelector('.hero');
+                    if (hero) hero.style.background = theme.gradient;
+                    
+                    const heroTagline = document.querySelector('.hero-tagline');
+                    if (heroTagline) heroTagline.innerHTML = theme.tagline;
+                    
+                    const heroTitle = document.querySelector('.hero-title');
+                    if (heroTitle) heroTitle.innerHTML = theme.title;
+                    
+                    // Update global CSS variables for a complete theme change across the application
+                    document.documentElement.style.setProperty('--primary', theme.primary);
+                    document.documentElement.style.setProperty('--primary-dark', theme.primaryDark);
+                    document.documentElement.style.setProperty('--primary-light', theme.primaryLight);
+                    document.documentElement.style.setProperty('--accent', theme.accent);
+                    
+                    // Update active tab color fallback
+                    document.querySelectorAll('.tab-btn.active').forEach(btn => {
+                        btn.style.color = theme.primary;
+                        btn.style.borderBottomColor = theme.primary;
+                    });
+                    
+                    // Update search button gradient specifically
+                    setTimeout(() => {
+                        const searchBtn = container.querySelector('.btn-search');
+                        if (searchBtn) searchBtn.style.background = theme.btnGrad;
+                    }, 10);
                     
                     // Set today's date as default
                     const today = new Date().toISOString().split('T')[0];
@@ -2462,6 +2886,163 @@ Resources:
                             if (el && !el.value) el.value = today;
                         });
                     }, 50);
+                }
+                
+                // ========================
+                // CABS AUTOCOMPLETE & GPS
+                // ========================
+                function useLiveLocation(btn) {
+                    if (!navigator.geolocation) {
+                        alert("Geolocation is not supported by your browser.");
+                        return;
+                    }
+                    
+                    const originalContent = btn.innerHTML;
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                    btn.disabled = true;
+                
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        
+                        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                const address = data.address;
+                                let locStr = address.city || address.town || address.state_district || address.state || 'Unknown Location';
+                                if (address.suburb) locStr = address.suburb + ', ' + locStr;
+                                
+                                const pickupInput = document.getElementById('cab-pickup');
+                                if (pickupInput) pickupInput.value = locStr;
+                                
+                                btn.innerHTML = originalContent;
+                                btn.disabled = false;
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                alert("Failed to reverse-geocode your location.");
+                                btn.innerHTML = originalContent;
+                                btn.disabled = false;
+                            });
+                    }, (error) => {
+                        console.error(error);
+                        alert("Unable to retrieve your location.");
+                        btn.innerHTML = originalContent;
+                        btn.disabled = false;
+                    });
+                }
+                
+                let addressFetchTimer;
+                function fetchAddressSuggestions(query, listId) {
+                    if (!query || query.length < 3) return;
+                    if (!listId) listId = 'cab-drop-suggestions'; // fallback
+                    
+                    clearTimeout(addressFetchTimer);
+                    addressFetchTimer = setTimeout(() => {
+                        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&countrycodes=in&limit=5`;
+                        fetch(url)
+                            .then(res => res.json())
+                            .then(data => {
+                                const datalist = document.getElementById(listId);
+                                if (!datalist) return;
+                                
+                                datalist.innerHTML = '';
+                                data.forEach(item => {
+                                    const opt = document.createElement('option');
+                                    opt.value = item.display_name;
+                                    datalist.appendChild(opt);
+                                });
+                            })
+                            .catch(err => console.error("Could not fetch address suggestions", err));
+                    }, 400);
+                }
+                
+                // ========================
+                // MAP MODAL LOGIC
+                // ========================
+                let mapInstance = null;
+                let mapMarker = null;
+                let mapTargetInputId = null;
+                
+                function openMapModal(targetInputId) {
+                    mapTargetInputId = targetInputId;
+                    document.getElementById('map-modal').style.display = 'flex';
+                    
+                    if (!mapInstance) {
+                        // Initialize map on first open
+                        mapInstance = L.map('map').setView([19.0760, 72.8777], 12); // Default Mumbai
+                        
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '© OpenStreetMap contributors',
+                            maxZoom: 19
+                        }).addTo(mapInstance);
+                        
+                        mapMarker = L.marker([19.0760, 72.8777], { draggable: true }).addTo(mapInstance);
+                        
+                        // Try to get user's location to center map
+                        if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition((pos) => {
+                                const lat = pos.coords.latitude;
+                                const lon = pos.coords.longitude;
+                                mapInstance.setView([lat, lon], 14);
+                                mapMarker.setLatLng([lat, lon]);
+                            }, () => {});
+                        }
+                
+                        // On map click, move marker
+                        mapInstance.on('click', function(e) {
+                            mapMarker.setLatLng(e.latlng);
+                        });
+                    }
+                    
+                    // Invalidate size to fix rendering issues inside hidden modals
+                    setTimeout(() => {
+                        mapInstance.invalidateSize();
+                    }, 100);
+                }
+                
+                function closeMapModal() {
+                    document.getElementById('map-modal').style.display = 'none';
+                }
+                
+                function closeMapModalOutside(e) {
+                    if (e.target.id === 'map-modal') closeMapModal();
+                }
+                
+                function confirmMapLocation() {
+                    if (!mapMarker || !mapTargetInputId) {
+                        closeMapModal();
+                        return;
+                    }
+                    
+                    const latlng = mapMarker.getLatLng();
+                    const btn = document.querySelector('#map-modal .btn-primary');
+                    const originalText = btn.innerText;
+                    btn.innerText = 'Confirming...';
+                    btn.disabled = true;
+                
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            const address = data.address;
+                            let locStr = data.display_name; // Use full display name for map selection for more accuracy
+                            
+                            const targetInput = document.getElementById(mapTargetInputId);
+                            if (targetInput) {
+                                targetInput.value = locStr;
+                            }
+                            
+                            btn.innerText = originalText;
+                            btn.disabled = false;
+                            closeMapModal();
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert("Failed to fetch address for selected location.");
+                            btn.innerText = originalText;
+                            btn.disabled = false;
+                            closeMapModal();
+                        });
                 }
                 
                 // ========================
@@ -2757,7 +3338,7 @@ Resources:
                     
                     document.getElementById('booking-summary').innerHTML = `
                         <div style="font-size:0.9rem;opacity:0.9">${title}</div>
-                        <span class="price-highlight">?${parseFloat(price).toLocaleString('en-IN')}</span>
+                        <span class="price-highlight">&#8377;${parseFloat(price).toLocaleString('en-IN')}</span>
                     `;
                     
                     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2796,6 +3377,43 @@ Resources:
                 function submitPayment(e) {
                     e.preventDefault();
                     if (!currentBooking || !currentUser) return;
+                    
+                    const errorDiv = document.getElementById('payment-error');
+                    if (errorDiv) {
+                        errorDiv.style.display = 'none';
+                        errorDiv.innerText = '';
+                    }
+                
+                    const payMethodNode = document.querySelector('input[name="pay_method"]:checked');
+                    const payMethod = payMethodNode ? payMethodNode.value : 'card';
+                    
+                    if (payMethod === 'card') {
+                        const cNum = (document.getElementById('card-number').value || '').replace(/\s/g, '');
+                        const cExp = (document.getElementById('card-expiry').value || '').trim();
+                        const cCvv = (document.getElementById('card-cvv').value || '').trim();
+                        
+                        if (cNum.length !== 16 || isNaN(cNum)) {
+                            if (errorDiv) { errorDiv.innerText = 'Invalid Card Number. Must be exactly 16 digits.'; errorDiv.style.display = 'block'; }
+                            return;
+                        }
+                        if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(cExp)) {
+                            if (errorDiv) { errorDiv.innerText = 'Invalid Expiry Date format (MM/YY).'; errorDiv.style.display = 'block'; }
+                            return;
+                        }
+                        
+                        const [expM, expY] = cExp.split('/');
+                        const now = new Date();
+                        const expDate = new Date(2000 + parseInt(expY), parseInt(expM), 0);
+                        if (expDate < now) {
+                            if (errorDiv) { errorDiv.innerText = 'Card has expired. Please use a valid card.'; errorDiv.style.display = 'block'; }
+                            return;
+                        }
+                
+                        if (cCvv.length !== 3 || isNaN(cCvv)) {
+                            if (errorDiv) { errorDiv.innerText = 'Invalid CVV. Must be exactly 3 digits.'; errorDiv.style.display = 'block'; }
+                            return;
+                        }
+                    }
                     
                     const btn = document.getElementById('pay-btn');
                     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
@@ -2972,28 +3590,6 @@ Resources:
                     if (el) el.remove();
                 }
                 
-                const botReplies = {
-                    'track': 'To track your booking, please go to <strong>My Trips</strong> in the top nav. You can view all your confirmed bookings there with the Booking ID.',
-                    'booking': 'Your booking ID is shown on the confirmation screen. You can also find it in <strong>My Trips</strong>. Need help with a specific booking ID?',
-                    'cancel': 'Cancellations are allowed up to 24 hours before travel. You will receive a full refund to your original payment method within 5-7 business days. To cancel, go to <strong>My Trips</strong> and click Cancel.',
-                    'refund': 'Refunds are processed within 5-7 business days to your original payment method. Card refunds may take up to 10 days depending on your bank.',
-                    'payment': 'We accept Credit/Debit Cards, UPI (Google Pay, PhonePe, Paytm), and Net Banking. If your payment failed, please try again or use a different method.',
-                    'change': 'Flight changes depend on the airline policy. Most Economy tickets allow one free date change. To change your flight, go to <strong>My Trips</strong> and click Modify.',
-                    'hotel': 'Hotel check-in is usually at 2 PM and check-out by 12 PM. Early check-in and late check-out may be available for an additional charge.',
-                    'bus': 'Buses typically depart from the listed pickup point. Arrive 15 minutes early. Most buses have charging points and WiFi on board.',
-                    'support': 'You can reach our 24/7 support team at <strong>support@travelease.in</strong> or call <strong>1800-XXX-XXXX</strong> (toll free).',
-                    'hello': 'Hello! \uD83D\uDC4B How can I assist you with your travel today?',
-                    'hi': 'Hi there! \uD83D\uDE0A What can I help you with today?'
-                };
-                
-                function getBotReply(msg) {
-                    const lower = msg.toLowerCase();
-                    for (const [key, reply] of Object.entries(botReplies)) {
-                        if (lower.includes(key)) return reply;
-                    }
-                    return 'Thanks for reaching out! \uD83D\uDE4F Our support team will get back to you shortly. For urgent queries, call <strong>1800-XXX-XXXX</strong> (toll free, 24/7).';
-                }
-                
                 function sendSupportMsg() {
                     const input = document.getElementById('support-input');
                     const text = input.value.trim();
@@ -3003,10 +3599,20 @@ Resources:
                     addSupportMsg(text, true);
                     showTyping();
                 
-                    setTimeout(() => {
+                    fetch('/api/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: text })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
                         removeTyping();
-                        addSupportMsg(getBotReply(text), false);
-                    }, 900 + Math.random() * 600);
+                        addSupportMsg(data.reply || "Thanks for reaching out!", false);
+                    })
+                    .catch(() => {
+                        removeTyping();
+                        addSupportMsg("Sorry, I'm having trouble connecting right now. For urgent queries, call 1800-XXX-XXXX.", false);
+                    });
                 }
                 
                 function quickReply(text) {
@@ -3014,10 +3620,21 @@ Resources:
                     if (qr) qr.remove();
                     addSupportMsg(text, true);
                     showTyping();
-                    setTimeout(() => {
+                    
+                    fetch('/api/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: text })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
                         removeTyping();
-                        addSupportMsg(getBotReply(text), false);
-                    }, 900 + Math.random() * 600);
+                        addSupportMsg(data.reply || "Thanks for reaching out!", false);
+                    })
+                    .catch(() => {
+                        removeTyping();
+                        addSupportMsg("Sorry, I'm having trouble connecting right now. For urgent queries, call 1800-XXX-XXXX.", false);
+                    });
                 }
                 
                 // ========================
@@ -3035,14 +3652,64 @@ Resources:
                 
                     content.innerHTML = '<div style="text-align:center;padding:20px;"><div class="loader-spinner" style="margin:0 auto;"></div></div>';
                 
-                    // Show last booking if exists
-                    setTimeout(() => {
-                        if (currentBooking) {
-                            content.innerHTML = '<p style="color:#64748b;font-size:0.9rem;">Showing your recent trips.</p>';
-                        } else {
-                            content.innerHTML = '<div style="text-align:center;padding:32px;"><i class="fa-solid fa-plane-circle-check" style="font-size:2.5rem;color:#94a3b8;margin-bottom:16px;display:block;"></i><h3 style="margin-bottom:8px;">No trips yet</h3><p style="color:#64748b;margin-bottom:20px;">Start searching for flights, hotels, or buses to plan your next trip!</p><button class="btn-primary" style="width:auto;padding:12px 28px;" onclick="closeModal2(\'trips\');">Search Now</button></div>';
-                        }
-                    }, 600);
+                    fetch(`/api/user/bookings/${currentUser.id}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.error) {
+                                content.innerHTML = `<div style="text-align:center; padding:40px; color:#ef4444;">Error: ${data.error}</div>`;
+                                return;
+                            }
+                            if (!data || data.length === 0) {
+                                content.innerHTML = '<div style="text-align:center;padding:32px;"><i class="fa-solid fa-plane-circle-check" style="font-size:2.5rem;color:#94a3b8;margin-bottom:16px;display:block;"></i><h3 style="margin-bottom:8px;">No trips yet</h3><p style="color:#64748b;margin-bottom:20px;">Start searching for flights, hotels, or buses to plan your next trip!</p><button class="btn-primary" style="width:auto;padding:12px 28px;" onclick="closeModal2(\'trips\');">Search Now</button></div>';
+                            } else {
+                                let html = '<p style="color:#64748b;font-size:0.9rem;margin-bottom:16px;">Showing your recent trips.</p><div style="display:flex;flex-direction:column;gap:12px; max-height:400px; overflow-y:auto; padding-right:8px;">';
+                                data.forEach(b => {
+                                    let date = new Date(b.booking_date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+                                    let icon = 'fa-plane';
+                                    let desc = '';
+                                    let typeLower = (b.service_type || '').toLowerCase();
+                                    if (typeLower.includes('flight')) {
+                                        icon = 'fa-plane';
+                                        desc = `${b.airline || 'Flight'}: ${b.flight_origin || ''} to ${b.flight_dest || ''}`;
+                                    } else if (typeLower.includes('hotel')) {
+                                        icon = 'fa-hotel';
+                                        desc = `${b.hotel_name || 'Hotel'} in ${b.hotel_loc || ''}`;
+                                    } else if (typeLower.includes('bus')) {
+                                        icon = 'fa-bus';
+                                        desc = `${b.operator_name || 'Bus'}: ${b.bus_origin || ''} to ${b.bus_dest || ''}`;
+                                    } else if (typeLower.includes('cab')) {
+                                        icon = 'fa-car';
+                                        desc = `Cab Type: ${b.cab_type || ''}`;
+                                    } else if (typeLower.includes('package')) {
+                                        icon = 'fa-suitcase-rolling';
+                                        desc = `Package to ${b.package_dest || ''}`;
+                                    } else {
+                                        desc = b.service_type;
+                                    }
+                                    html += `
+                                    <div style="border:1px solid #e2e8f0;border-radius:12px;padding:16px;display:flex;justify-content:space-between;align-items:center;">
+                                        <div style="display:flex;align-items:center;gap:16px;">
+                                            <div style="width:40px;height:40px;background:#f8fafc;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:1.1rem;flex-shrink:0;">
+                                                <i class="fa-solid ${icon}"></i>
+                                            </div>
+                                            <div>
+                                                <h4 style="margin:0;font-size:0.95rem;color:#1e293b;line-height:1.2;">${desc}</h4>
+                                                <p style="margin:4px 0 0;font-size:0.8rem;color:#64748b;">Booked on ${date} &bull; <span style="color:#059669;font-weight:600;">${b.status}</span></p>
+                                            </div>
+                                        </div>
+                                        <div style="text-align:right;flex-shrink:0;margin-left:10px;">
+                                            <div style="font-weight:700;color:#1e293b;">&#8377;${parseFloat(b.total_price).toFixed(2)}</div>
+                                            <div style="font-size:0.75rem;color:#94a3b8;margin-top:2px;">#TB-000${b.id}</div>
+                                        </div>
+                                    </div>`;
+                                });
+                                html += '</div>';
+                                content.innerHTML = html;
+                            }
+                        })
+                        .catch(err => {
+                            content.innerHTML = `<div style="text-align:center; padding:40px; color:#ef4444;">Failed to fetch trips.</div>`;
+                        });
                 }
                 
                 function closeModal2(type) {
@@ -3096,13 +3763,70 @@ Resources:
                     document.body.appendChild(modal);
                 }
                 
-                function copyCode(code, el) {
+                function copyCode(code, element) {
                     navigator.clipboard.writeText(code).then(() => {
-                        el.innerHTML = 'Copied! <i class="fa-solid fa-check"></i>';
-                        setTimeout(() => { el.innerHTML = code + ' <i class="fa-regular fa-copy"></i>'; }, 1500);
+                        const origHtml = element.innerHTML;
+                        element.innerHTML = 'Copied! <i class="fa-solid fa-check"></i>';
+                        setTimeout(() => element.innerHTML = origHtml, 2000);
                     });
                 }
                 
+                // ========================
+                // LIVE LOCATION (CABS)
+                // ========================
+                function useLiveLocation(btn) {
+                    const input = document.getElementById('cab-pickup');
+                    
+                    const fallbackIPLocation = () => {
+                        fetch('https://ipapi.co/json/')
+                            .then(res => res.json())
+                            .then(data => {
+                                btn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i>';
+                                if (data && data.city) {
+                                    if (input) input.value = data.city;
+                                } else {
+                                    alert("Could not determine city from your IP address.");
+                                }
+                            })
+                            .catch(() => {
+                                btn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i>';
+                                alert("Failed to fetch location data.");
+                            });
+                    };
+                
+                    if (!navigator.geolocation || window.location.protocol === 'http:' && window.location.hostname !== 'localhost') {
+                        // Fallback to IP geolocation if HTML5 Geolocation is not supported or we're on insecure HTTP
+                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                        fallbackIPLocation();
+                        return;
+                    }
+                    
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const lat = position.coords.latitude;
+                            const lon = position.coords.longitude;
+                            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10`)
+                                .then(res => res.json())
+                                .then(data => {
+                                    btn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i>';
+                                    if (data && data.address) {
+                                        let city = data.address.city || data.address.town || data.address.state_district || "Unknown Location";
+                                        if (input) input.value = city;
+                                    } else {
+                                        fallbackIPLocation();
+                                    }
+                                })
+                                .catch(() => {
+                                    fallbackIPLocation();
+                                });
+                        },
+                        (error) => {
+                            // User denied permission or error occurred, fallback to IP
+                            fallbackIPLocation();
+                        }
+                    );
+                }
                 
                 // ========================
                 // ADMIN LOGIN
@@ -3113,14 +3837,310 @@ Resources:
                     const pwd = document.getElementById('admin-pwd').value;
                     
                     if (user === 'admin' && pwd === 'admin123') {
-                        alert('Welcome to Admin Portal! Dashboard loading...');
-                        closeModal('admin-login');
-                        // In a real app, this would redirect to /admin-dashboard.html
-                        document.body.innerHTML = '<div style="padding:50px; text-align:center; font-family:sans-serif;"><h2>Admin Dashboard</h2><p>Overview, Users, and Bookings would appear here.</p><button onclick="location.reload()" style="padding:10px 20px; background:#1a56db; color:white; border:none; border-radius:5px; cursor:pointer;">Logout</button></div>';
+                        
+                        document.getElementById('admin-error').style.display = 'none';
+                        
+                        // Fetch Admin Data and Users
+                        Promise.all([
+                            fetch('/api/admin/stats').then(r => r.json()),
+                            fetch('/api/admin/users').then(r => r.json())
+                        ])
+                        .then(([data, users]) => {
+                            if (data.error) {
+                                alert('Error loading dashboard: ' + data.error);
+                                return;
+                            }
+                            if (users.error) {
+                                console.error("Failed to load users:", users.error);
+                                users = [];
+                            }
+                            
+                            closeModal('admin-login');
+                            
+                            let recentBookingsHtml = '';
+                            if (data.recent_bookings && data.recent_bookings.length > 0) {
+                                data.recent_bookings.forEach(b => {
+                                    const dateObj = new Date(b.booking_date);
+                                    const dateStr = dateObj.toLocaleDateString('en-IN') + ' ' + dateObj.toLocaleTimeString('en-IN', {hour: '2-digit', minute:'2-digit'});
+                                    recentBookingsHtml += `
+                                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                            <td style="padding: 15px;">#${b.booking_id}</td>
+                                            <td style="padding: 15px;">${b.user_name}</td>
+                                            <td style="padding: 15px;">
+                                                <span style="background: rgba(37, 99, 235, 0.2); color: #60a5fa; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem;">${b.booking_type}</span>
+                                            </td>
+                                            <td style="padding: 15px;">&#8377;${parseFloat(b.amount).toLocaleString('en-IN')}</td>
+                                            <td style="padding: 15px; color: #94a3b8;">${dateStr}</td>
+                                        </tr>
+                                    `;
+                                });
+                            } else {
+                                recentBookingsHtml = '<tr><td colspan="5" style="padding: 15px; text-align: center; color: #94a3b8;">No recent bookings found.</td></tr>';
+                            }
+                
+                            let usersHtml = '';
+                            if (users && users.length > 0) {
+                                users.forEach(u => {
+                                    usersHtml += `
+                                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'" onclick="viewAdminUserBookings(${u.id}, '${u.name}')">
+                                            <td style="padding: 15px; font-weight: 600; color: #60a5fa;">#${u.id}</td>
+                                            <td style="padding: 15px;">${u.name}</td>
+                                            <td style="padding: 15px;">${u.email}</td>
+                                            <td style="padding: 15px; color: #94a3b8;">${u.joined}</td>
+                                            <td style="padding: 15px; text-align: right;"><button onclick="showAdminUserBookings(${u.id}, \'${u.name}\')" style="background: rgba(37, 99, 235, 0.2); color: #60a5fa; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;">View History <i class="fa-solid fa-arrow-right"></i></button></td>
+                                        </tr>
+                                    `;
+                                });
+                            } else {
+                                usersHtml = '<tr><td colspan="5" style="padding: 15px; text-align: center; color: #94a3b8;">No users found.</td></tr>';
+                            }
+                
+                
+                                document.body.innerHTML = `
+                                    <div style="min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: white; font-family: 'Inter', sans-serif; padding: 40px;">
+                                        
+                                        <div style="max-width: 1200px; margin: 0 auto;">
+                                            <!-- Header -->
+                                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+                                                <div>
+                                                    <h1 style="font-size: 2.5rem; font-weight: 700; margin: 0; background: linear-gradient(90deg, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Admin Dashboard</h1>
+                                                    <p style="color: #94a3b8; margin-top: 5px;">Welcome back, Admin.</p>
+                                                </div>
+                                                <button onclick="location.reload()" style="padding: 12px 24px; background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; cursor: pointer; font-weight: 600; backdrop-filter: blur(10px); transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                                                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                                                </button>
+                                            </div>
+                
+                                            <!-- Stat Cards -->
+                                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 40px;">
+                                                <!-- Total Users -->
+                                                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 30px; backdrop-filter: blur(10px);">
+                                                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                                        <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(59, 130, 246, 0.2); color: #3b82f6; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-right: 15px;">
+                                                            <i class="fa-solid fa-users"></i>
+                                                        </div>
+                                                        <h3 style="margin: 0; color: #94a3b8; font-weight: 500; font-size: 1.1rem;">Total Users</h3>
+                                                    </div>
+                                                    <div style="font-size: 2.5rem; font-weight: 700;">${data.total_users}</div>
+                                                </div>
+                                                
+                                                <!-- Total Bookings -->
+                                                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 30px; backdrop-filter: blur(10px);">
+                                                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                                        <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(16, 185, 129, 0.2); color: #10b981; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-right: 15px;">
+                                                            <i class="fa-solid fa-ticket"></i>
+                                                        </div>
+                                                        <h3 style="margin: 0; color: #94a3b8; font-weight: 500; font-size: 1.1rem;">Total Bookings</h3>
+                                                    </div>
+                                                    <div style="font-size: 2.5rem; font-weight: 700;">${data.total_bookings}</div>
+                                                </div>
+                
+                                                <!-- Total Revenue -->
+                                                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 30px; backdrop-filter: blur(10px);">
+                                                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                                        <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(139, 92, 246, 0.2); color: #8b5cf6; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-right: 15px;">
+                                                            <i class="fa-solid fa-wallet"></i>
+                                                        </div>
+                                                        <h3 style="margin: 0; color: #94a3b8; font-weight: 500; font-size: 1.1rem;">Total Revenue</h3>
+                                                    </div>
+                                                    <div style="font-size: 2.5rem; font-weight: 700;">&#8377;${data.total_revenue.toLocaleString('en-IN')}</div>
+                                                </div>
+                                            </div>
+                
+                                            <!-- Recent Bookings Table -->
+                                            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 30px; backdrop-filter: blur(10px);">
+                                                <h3 style="margin: 0 0 20px 0; font-size: 1.4rem; font-weight: 600;">Recent Transactions</h3>
+                                                <div style="overflow-x: auto;">
+                                                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                                                        <thead>
+                                                            <tr style="border-bottom: 2px solid rgba(255,255,255,0.1); color: #94a3b8;">
+                                                                <th style="padding: 15px; font-weight: 600;">Booking ID</th>
+                                                                <th style="padding: 15px; font-weight: 600;">User Name</th>
+                                                                <th style="padding: 15px; font-weight: 600;">Service Type</th>
+                                                                <th style="padding: 15px; font-weight: 600;">Amount</th>
+                                                                <th style="padding: 15px; font-weight: 600;">Date</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            ${recentBookingsHtml}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                
+                                            <!-- Users Table -->
+                                            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 30px; backdrop-filter: blur(10px); margin-top: 40px;">
+                                                <h3 style="margin: 0 0 20px 0; font-size: 1.4rem; font-weight: 600;">Registered Users</h3>
+                                                <p style="color: #94a3b8; font-size: 0.9rem; margin-top: -15px; margin-bottom: 20px;">Click on a user to view their booking history.</p>
+                                                <div style="overflow-x: auto;">
+                                                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                                                        <thead>
+                                                            <tr style="border-bottom: 2px solid rgba(255,255,255,0.1); color: #94a3b8;">
+                                                                <th style="padding: 15px; font-weight: 600;">ID</th>
+                                                                <th style="padding: 15px; font-weight: 600;">Name</th>
+                                                                <th style="padding: 15px; font-weight: 600;">Email</th>
+                                                                <th style="padding: 15px; font-weight: 600;">Joined</th>
+                                                                <th style="padding: 15px; font-weight: 600;"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            ${usersHtml}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                
+                                        </div>
+                                    </div>
+                
+                                    <!-- Admin User Bookings Modal -->
+                                    <div id="admin-user-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+                                        <div style="background: #1e293b; color: white; border-radius: 16px; width: 90%; max-width: 800px; max-height: 85vh; display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
+                                            <div style="padding: 20px 25px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02);">
+                                                <h2 style="margin: 0; font-size: 1.4rem;" id="admin-user-modal-title">User Bookings</h2>
+                                                <button onclick="document.getElementById('admin-user-modal').style.display='none'" style="background: transparent; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer;">&times;</button>
+                                            </div>
+                                            <div id="admin-user-modal-content" style="padding: 25px; overflow-y: auto; flex: 1;">
+                                                Loading...
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                        })
+                        .catch(err => {
+                                console.error(err);
+                                alert('Failed to load dashboard data.');
+                            });
+                
                     } else {
-                        alert('Invalid Admin Credentials!');
+                        document.getElementById('admin-error').style.display = 'block';
                     }
                 }
+                
+                
+                function showAdminUserBookings(userId, userName) {
+                    const modal = document.getElementById('admin-user-modal');
+                    const title = document.getElementById('admin-user-modal-title');
+                    const content = document.getElementById('admin-user-modal-content');
+                    
+                    title.innerText = `Bookings for ${userName}`;
+                    content.innerHTML = '<div style="text-align:center;padding:20px;"><div class="loader-spinner" style="margin:0 auto;"></div></div>';
+                    modal.style.display = 'flex';
+                
+                    fetch(`/api/user/bookings/${userId}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.error) {
+                                content.innerHTML = `<div style="text-align:center; padding:40px; color:#ef4444;">Error: ${data.error}</div>`;
+                                return;
+                            }
+                            if (!data || data.length === 0) {
+                                content.innerHTML = '<div style="text-align:center;padding:32px;color:#94a3b8;">No bookings found for this user.</div>';
+                            } else {
+                                let html = '<div style="display:flex;flex-direction:column;gap:12px; max-height:60vh; overflow-y:auto; padding-right:8px;">';
+                                data.forEach(b => {
+                                    let date = new Date(b.booking_date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+                                    let icon = 'fa-plane';
+                                    let desc = '';
+                                    let typeLower = (b.service_type || '').toLowerCase();
+                                    if (typeLower.includes('flight')) {
+                                        icon = 'fa-plane';
+                                        desc = `${b.airline || 'Flight'}: ${b.flight_origin || ''} to ${b.flight_dest || ''}`;
+                                    } else if (typeLower.includes('hotel')) {
+                                        icon = 'fa-hotel';
+                                        desc = `${b.hotel_name || 'Hotel'} in ${b.hotel_loc || ''}`;
+                                    } else if (typeLower.includes('bus')) {
+                                        icon = 'fa-bus';
+                                        desc = `${b.operator_name || 'Bus'}: ${b.bus_origin || ''} to ${b.bus_dest || ''}`;
+                                    } else if (typeLower.includes('cab')) {
+                                        icon = 'fa-car';
+                                        desc = `Cab Type: ${b.cab_type || ''}`;
+                                    } else if (typeLower.includes('package')) {
+                                        icon = 'fa-suitcase-rolling';
+                                        desc = `Package to ${b.package_dest || ''}`;
+                                    } else {
+                                        desc = b.service_type;
+                                    }
+                                    html += `
+                                    <div style="border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.02);">
+                                        <div style="display:flex;align-items:center;gap:16px;">
+                                            <div style="width:40px;height:40px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#60a5fa;font-size:1.1rem;flex-shrink:0;">
+                                                <i class="fa-solid ${icon}"></i>
+                                            </div>
+                                            <div>
+                                                <h4 style="margin:0;font-size:0.95rem;color:#f8fafc;line-height:1.2;">${desc}</h4>
+                                                <p style="margin:4px 0 0;font-size:0.8rem;color:#94a3b8;">Booked on ${date} &bull; <span style="color:#10b981;font-weight:600;">${b.status}</span></p>
+                                            </div>
+                                        </div>
+                                        <div style="text-align:right;flex-shrink:0;margin-left:10px;">
+                                            <div style="font-weight:700;color:#f8fafc;">&#8377;${parseFloat(b.total_price).toFixed(2)}</div>
+                                            <div style="font-size:0.75rem;color:#64748b;margin-top:2px;">#TB-000${b.id}</div>
+                                        </div>
+                                    </div>`;
+                                });
+                                html += '</div>';
+                                content.innerHTML = html;
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            content.innerHTML = `<div style="text-align:center; padding:40px; color:#ef4444;">Failed to fetch trips.</div>`;
+                        });
+                }
+                
+                // Alias for row-click handler in admin users table
+                function viewAdminUserBookings(userId, userName) {
+                    showAdminUserBookings(userId, userName);
+                }
+                
+                // ========================
+                // TRAIN COMING SOON
+                // ========================
+                function showTrainComingSoon() {
+                    const panel = document.getElementById('train-coming-soon');
+                    if (panel) {
+                        panel.style.display = 'block';
+                        panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+                
+                // ========================
+                // SERVICE-THEMED CHECKOUT
+                // ========================
+                const checkoutThemeMap = {
+                    flights:  { icon: 'fa-plane',             color: '#1a56db', label: 'Flight' },
+                    hotels:   { icon: 'fa-hotel',             color: '#7c3aed', label: 'Hotel' },
+                    buses:    { icon: 'fa-bus',               color: '#059669', label: 'Bus' },
+                    cabs:     { icon: 'fa-taxi',              color: '#d97706', label: 'Cab' },
+                    packages: { icon: 'fa-suitcase-rolling',  color: '#ea580c', label: 'Package' }
+                };
+                
+                // Override startCheckout to apply service theme
+                const _originalStartCheckout = startCheckout;
+                startCheckout = function(service_type, service_id, price, title) {
+                    _originalStartCheckout(service_type, service_id, price, title);
+                    
+                    const theme = checkoutThemeMap[service_type] || checkoutThemeMap.flights;
+                    const header = document.querySelector('.checkout-header');
+                    if (header) {
+                        const iconEl = header.querySelector('.checkout-icon');
+                        if (iconEl) {
+                            iconEl.className = 'fa-solid ' + theme.icon + ' checkout-icon';
+                            iconEl.style.color = theme.color;
+                        }
+                    }
+                    
+                    const summary = document.getElementById('booking-summary');
+                    if (summary) {
+                        summary.style.borderLeft = `4px solid ${theme.color}`;
+                        summary.style.background = `linear-gradient(135deg, ${theme.color}08, ${theme.color}15)`;
+                    }
+                    
+                    const payBtn = document.getElementById('pay-btn');
+                    if (payBtn) {
+                        payBtn.style.background = `linear-gradient(135deg, ${theme.color}, ${theme.color}dd)`;
+                    }
+                };
                 
               mode: '000644'
               owner: 'ec2-user'
